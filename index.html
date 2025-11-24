@@ -1481,8 +1481,12 @@
     const SIZE_K = 0.40;
     const DRIFT_MAX = 0.16;
     const DRIFT_CHANGE_MS = 7000;
+	
+    const DATA_URL = "https://script.google.com/macros/s/AKfycbzVXCW9daPqP4Cmnq9WdCGMUyJ1Oy7KX9O5raf6YcJJ9LyVi-ofDBr8f6VItXhI51Vx6A/exec";
+    const FETCH_INTERVAL_MS = 6000_000; // 1 минута
+	
 
-    const rawData = [
+    const fallbackRawData = [
       {
         id: "be5a7773-d763-4dae-aba2-6d611b7133e9",
         ticker: "USTCUSDT",
@@ -1547,6 +1551,8 @@
         diff: 0.026
       }
     ];
+	
+	let rawData = fallbackRawData.slice();
 
     const defsHero = svgHero.append("defs");
     const gradsGroupHero = defsHero.append("g").attr("id", "bubbleGradients");
@@ -1811,9 +1817,53 @@
       updateGradientsHero(nodesHero);
       createOrUpdateSimulationHero();
     }
+    async function reloadHeroBubblesFromRemote(useFallbackOnError = true) {
+      try {
+        const resp = await fetch(DATA_URL, { cache: "no-store" });
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status}`);
+        }
 
-    initHeroBubbles();
-    setInterval(randomizeDriftHero, DRIFT_CHANGE_MS);
+        const json = await resp.json();
+
+        // ожидаем массив объектов с полями id, ticker, exchange1, exchange2, diff
+        const parsed = (Array.isArray(json) ? json : []).map((row, idx) => {
+          const diffVal = typeof row.diff === "string" ? parseFloat(row.diff) : row.diff;
+
+          return {
+            id: row.id ?? `remote-${idx}`,
+            ticker: row.ticker ?? row.symbol ?? "",
+            exchange1: row.exchange1 ?? row.ex1 ?? row.exchange_1 ?? "",
+            exchange2: row.exchange2 ?? row.ex2 ?? row.exchange_2 ?? "",
+            diff: Number.isFinite(diffVal) ? diffVal : 0
+          };
+        }).filter(d => d.ticker && Number.isFinite(d.diff));
+
+        if (!parsed.length) {
+          throw new Error("empty or invalid data");
+        }
+
+        rawData = parsed;
+        initHeroBubbles();
+      } catch (err) {
+        console.error("Failed to reload hero bubbles from remote:", err);
+        if (useFallbackOnError) {
+          rawData = fallbackRawData.slice();
+          initHeroBubbles();
+        }
+      }
+    }
+	
+
+	reloadHeroBubblesFromRemote(true);
+
+	    // раз в минуту обновляем данные пузырей
+	    setInterval(() => {
+	      reloadHeroBubblesFromRemote(false);
+	    }, FETCH_INTERVAL_MS);
+
+	    // постоянное медленное дрейфовое движение
+	    setInterval(randomizeDriftHero, DRIFT_CHANGE_MS);
 
     // ==== MATRIX STATS ====
     const screenerData = window.screenerData || [];
