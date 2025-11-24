@@ -1069,6 +1069,22 @@
       }
     }
   </style>
+  <script src="//code.jivo.ru/widget/KNUCXaIKOS" async=""></script>
+  <link rel="stylesheet" href="https://code.jivo.ru/css/13ea1e6/widget.css" class="jv-css">
+  <link rel="stylesheet" type="text/css" href="https://code.jivo.ru/css/13ea1e6/chatcontainer.widget.css">
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105484818', 'ym');
+
+      ym(105484818, 'init', {ssr:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/105484818" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
 </head>
 <body>
   <div class="page">
@@ -1095,7 +1111,7 @@
           <div class="nav-cta">
             <button
               class="btn btn-primary"
-              onclick="window.open('https://spread-i.online/cryptoscreener','_blank')"
+              onclick="ym(105484818,'reachGoal','header-button-click'); window.open('https://spread-i.online/cryptoscreener','_blank')"
             >
               Попробовать бесплатно
             </button>
@@ -1122,7 +1138,7 @@
                 Мы развиваем платформу совместно с трейдерами, чтобы сделать самый удобный и эффективный инструмент для заработка на межбиржевом арбитраже.
               </p>
               <div class="hero-actions">
-                <button class="btn btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+                <button class="btn btn-primary" onclick="ym(105484818,'reachGoal','hero-button-click'); 												window.open('https://spread-i.online/cryptoscreener','_blank')">
                   Лучше один раз увидеть
                 </button>
               </div>
@@ -1386,21 +1402,21 @@
 
          <div class="grid-3">
            <div class="card card-soft">
-             <div class="card-title">Предложи фичу</div>
+             <div class="card-title">Предложите фичу</div>
              <p class="card-text">
                Поделитесь идеей или нужным функционалом — и получите год бесплатного доступа
                после релиза платной версии.
              </p>
            </div>
            <div class="card card-soft">
-             <div class="card-title">Зарабатывай с нами</div>
+             <div class="card-title">Зарабатывайте с нами</div>
              <p class="card-text">
                Рекомендуйте скринер своей аудитории и получайте долю от платежей через персональный промокод.
                Мы поможем подготовить материалы и расскажем о продукте.
              </p>
            </div>
            <div class="card card-soft">
-             <div class="card-title">Интегрируй в свои решения</div>
+             <div class="card-title">Интегрируйте в свои решения</div>
              <p class="card-text">
                Мы открыты к API-интеграциям и подключению в ваши инструменты — публичные продукты,
                внутренние терминалы и аналитические системы.
@@ -1421,7 +1437,7 @@
 	            
 	            </div>
 	            <div class="cta-actions">
-	              <button class="btn btn-primary">
+	              <button class="btn btn-primary" onclick="ym(105484818,'reachGoal','link-us-click');jivo_api.open();">
 	                Связаться с нами
 	              </button>
 	            </div>
@@ -1709,6 +1725,7 @@
 
       allNodes.on("click", function(event, d) {
         const url = `https://spread-i.online/cryptoscreener/${d.pairId}`;
+		ym(105484818,'reachGoal','balloon-click');
         window.open(url, "_blank");
       });
 
@@ -1920,7 +1937,10 @@
       return { counts, maxCount };
     }
 
-    function updateMatrix() {
+    function updateMatrix(skip_metrika=false) {
+	  if (!skip_metrika) {
+		  ym(105484818,'reachGoal','exchange-stat-play')
+	  }
       const diffThreshold = Number(diffSlider.value);
       const timeThreshold = Number(timeSlider.value);
 
@@ -1959,7 +1979,7 @@
 
     if (exchanges.length > 0) {
       buildMatrixSkeleton();
-      updateMatrix();
+      updateMatrix(true);
       diffSlider.addEventListener('input', updateMatrix);
       timeSlider.addEventListener('input', updateMatrix);
     }
@@ -1983,7 +2003,7 @@
     function durationMinutes(durationSecondsStr) {
       const sec = Number(durationSecondsStr);
       if (!Number.isFinite(sec)) return "";
-      return Math.round(sec / 60);
+      return sec;
     }
 
     function parseNumberMaybe(str) {
@@ -2273,6 +2293,7 @@
       const slideIndexLocal = slideItems.length;
       tabBtn.addEventListener("click", () => {
         currentIndex = slideIndexLocal;
+		ym(105484818,'reachGoal','deals-switch');
         updateSlider();
       });
 
