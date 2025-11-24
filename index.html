@@ -1689,6 +1689,23 @@
         });
 
       const allNodes = nodeMerge;
+	  
+	  // --- Увеличение пузыря на 5% при наведении ---
+	  allNodes
+	    .on("mouseenter.enlarge", function (event, d) {
+	      d._orig_r = d.r;           // запомним оригинальный размер
+	      d.r = d.r * 1.05;          // увеличиваем
+	      d3.select(this).select("circle")
+	        .transition().duration(120)
+	        .attr("r", d.r);
+	    })
+	    .on("mouseleave.enlarge", function (event, d) {
+	      if (d._orig_r) d.r = d._orig_r;
+	      d3.select(this).select("circle")
+	        .transition().duration(120)
+	        .attr("r", d.r);
+	    });
+	  
 
       allNodes.on("click", function(event, d) {
         const url = `https://spread-i.online/cryptoscreener/${d.pairId}`;
